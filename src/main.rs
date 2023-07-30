@@ -9,18 +9,22 @@ const SLEEP_TIME: Duration = Duration::from_millis(500);
 
 fn main() {
     let mut board = Board::new();
-    board.set_cell(3, 3, true);
-    board.set_cell(1, 1, true);
-    board.set_cell(4, 3, true);
-    board.set_cell(5, 3, true);
-    board.set_cell(6, 3, true);
-    board.set_cell(5, 5, true);
-    board.set_cell(5, 6, true);
+    board.set_cell(32, 31, true);
+    board.set_cell(33, 31, true);
+    board.set_cell(31, 31, true);
+    board.set_cell(33, 32, true);
+
+    let mut generation = 1;
+
+    let _ = clearscreen::clear();
+    print_board(&board, generation);
+    thread::sleep( Duration::from_millis(1000));
 
     loop {
         let _ = clearscreen::clear();
         board = perform_generation(&mut board);
-        print_board(&board);
+        generation += 1;
+        print_board(&board, generation);
         thread::sleep(SLEEP_TIME);
     }
 }
@@ -53,7 +57,7 @@ fn update_cell(board: &Board, x: usize, y: usize) -> bool {
     return false;
 }
 
-fn print_board(board: &Board) {
+fn print_board(board: &Board, generation: u32) {
     println!();
     for row in board.cells.iter() {
         for cell in row.iter() {
@@ -61,6 +65,7 @@ fn print_board(board: &Board) {
         }
         println!()
     }
+    println!("Generation: {}", generation)
 }
 
 fn fmt_board_piece(value: &bool) -> char {
