@@ -1,9 +1,10 @@
 [package]
 name = "game-of-life"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-clearscreen = {version = "2.0.1"}
+winit = "0.28"
+env_logger = "0.10"
+glium = {git = "https://github.com/glium/glium"}
+rand = "0.8"

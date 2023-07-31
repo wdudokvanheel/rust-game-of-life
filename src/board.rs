@@ -1,4 +1,4 @@
-const BOARD_SIZE: usize = 64;
+pub const BOARD_SIZE: usize = 128;
 
 const NEIGHBOUR_CELLS: [[i32; 2]; 8] = [
     [0, -1],
