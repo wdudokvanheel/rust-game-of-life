@@ -51,7 +51,7 @@ fn update_cell(board: &Board, x: usize, y: usize) -> bool {
         return true;
     }
 
-    if neighbours >= 3 {
+    if neighbours == 3 {
         return true;
     }
     return false;
