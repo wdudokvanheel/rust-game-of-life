@@ -17,6 +17,7 @@ use board::Board;
 use shader::create_shader_program;
 
 use crate::board::BOARD_SIZE;
+use crate::direction::Direction::{East, South};
 use crate::patterns::Pattern;
 use crate::vertex::Vertex;
 
@@ -24,14 +25,16 @@ mod board;
 mod vertex;
 mod shader;
 mod patterns;
+mod direction;
 
-const SLEEP_TIME: u128 = 100;
+const LOGIC_UPDATE_TIME: u128 = 100;
 
 fn main() {
     let mut board = Board::new();
-    let pos = BOARD_SIZE / 2;
-    let glider = Pattern::Acorn;
-    board.place_pattern(glider, pos, pos);
+    let center = BOARD_SIZE / 2;
+
+    let gun = Pattern::GliderGun;
+    board.place_rotated_pattern(gun, center, center, East);
 
     let event_loop = EventLoopBuilder::new().build();
     let (window, display) = create_window_display(&event_loop);
@@ -81,9 +84,9 @@ fn main() {
                     tex: sampler,
                 };
 
-                while elapsed > SLEEP_TIME {
+                while elapsed > LOGIC_UPDATE_TIME {
                     board = perform_generation(&mut board);
-                    elapsed -= SLEEP_TIME;
+                    elapsed -= LOGIC_UPDATE_TIME;
                 }
                 update_texture(&texture, &board);
                 draw_frame(&display, &program, &vertex_buffer, &indices, &uniforms);

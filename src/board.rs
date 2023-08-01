@@ -1,4 +1,5 @@
-use crate::patterns::Pattern;
+use crate::direction::Direction;
+use crate::patterns::{Pattern};
 
 pub const BOARD_SIZE: usize = 512;
 
@@ -26,6 +27,12 @@ impl Board {
 
     pub fn place_pattern(&mut self, pattern: Pattern, x: usize, y: usize) {
         let pattern_grid = pattern.grid();
+
+        self.set_cells(pattern_grid, x, y);
+    }
+
+    pub fn place_rotated_pattern(&mut self, pattern: Pattern, x: usize, y: usize, direction: Direction) {
+        let pattern_grid = pattern.rotated_grid(direction);
         self.set_cells(pattern_grid, x, y);
     }
 
