@@ -32,7 +32,7 @@ pub fn create_shader_program(display: &Display<WindowSurface>) -> Program {
     }
     "#;
 
-    let program = glium::Program::from_source(display, vertex_shader_src, fragment_shader_src,
+    let program = Program::from_source(display, vertex_shader_src, fragment_shader_src,
                                               None).unwrap();
     return program;
 }

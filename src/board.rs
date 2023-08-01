@@ -1,4 +1,6 @@
-pub const BOARD_SIZE: usize = 128;
+use crate::patterns::Pattern;
+
+pub const BOARD_SIZE: usize = 512;
 
 const NEIGHBOUR_CELLS: [[i32; 2]; 8] = [
     [0, -1],
@@ -19,6 +21,24 @@ impl Board {
     pub fn new() -> Self {
         Board {
             cells: [[false; BOARD_SIZE]; BOARD_SIZE],
+        }
+    }
+
+    pub fn place_pattern(&mut self, pattern: Pattern, x: usize, y: usize) {
+        let pattern_grid = pattern.grid();
+        self.set_cells(pattern_grid, x, y);
+    }
+
+    pub fn set_cells(&mut self, cells: Vec<Vec<u8>>, x: usize, y: usize) {
+        for (pattern_y, row) in cells.iter().enumerate() {
+            for (pattern_x, &cell) in row.iter().enumerate() {
+                let board_x = pattern_x + x;
+                let board_y = pattern_y + y;
+
+                if board_x < BOARD_SIZE && board_y < BOARD_SIZE {
+                    self.cells[board_y][board_x] = cell == 1;
+                }
+            }
         }
     }
 

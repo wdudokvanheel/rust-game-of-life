@@ -17,23 +17,21 @@ use board::Board;
 use shader::create_shader_program;
 
 use crate::board::BOARD_SIZE;
+use crate::patterns::Pattern;
 use crate::vertex::Vertex;
 
 mod board;
 mod vertex;
 mod shader;
+mod patterns;
 
 const SLEEP_TIME: u128 = 100;
 
 fn main() {
     let mut board = Board::new();
     let pos = BOARD_SIZE / 2;
-
-    board.set_cell(pos, pos - 1, true);
-    board.set_cell(pos + 1, pos - 1, true);
-    board.set_cell(pos - 1, pos - 1, true);
-    board.set_cell(pos + 1, pos, true);
-    board.set_cell(pos, pos + 1, true);
+    let glider = Pattern::Acorn;
+    board.place_pattern(glider, pos, pos);
 
     let event_loop = EventLoopBuilder::new().build();
     let (window, display) = create_window_display(&event_loop);
