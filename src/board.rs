@@ -1,7 +1,7 @@
 use crate::direction::Direction;
 use crate::patterns::{Pattern};
 
-pub const BOARD_SIZE: usize = 512;
+pub const BOARD_SIZE: usize = 256;
 
 const NEIGHBOUR_CELLS: [[i32; 2]; 8] = [
     [0, -1],

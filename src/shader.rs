@@ -24,10 +24,10 @@ pub fn create_shader_program(display: &Display<WindowSurface>) -> Program {
         vec2 pos = gl_FragCoord.xy / screensize;
         pos.y = 1.0 - pos.y;
         if(texture(tex, pos).r > 0){
-            color = vec4(0.4, 0.01, 0.24, 1);
+            color = vec4(0.1, 0.1, 0.44, 1);
         }
         else{
-            color = vec4(0.96, 0.96, 0.96, 1);
+            color = vec4(1, 0.94, 0.96, 1);
         }
     }
     "#;

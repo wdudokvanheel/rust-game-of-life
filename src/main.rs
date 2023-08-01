@@ -27,14 +27,16 @@ mod shader;
 mod patterns;
 mod direction;
 
-const LOGIC_UPDATE_TIME: u128 = 100;
+const LOGIC_UPDATE_TIME: i128 = 50;
+const SLEEP_ON_START: i128 = 1000;
 
 fn main() {
     let mut board = Board::new();
     let center = BOARD_SIZE / 2;
 
-    let gun = Pattern::GliderGun;
-    board.place_rotated_pattern(gun, center, center, East);
+    let pattern = Pattern::Acorn;
+    // let pattern = Pattern::GliderGun;
+    board.place_rotated_pattern(pattern, center, center, East);
 
     let event_loop = EventLoopBuilder::new().build();
     let (window, display) = create_window_display(&event_loop);
@@ -52,7 +54,7 @@ fn main() {
     let texture = Texture2d::new(&display, image).unwrap();
 
     let mut last_update_time = Instant::now();
-    let mut elapsed = 0u128;
+    let mut elapsed: i128 = -SLEEP_ON_START;
 
     event_loop.run(move |ev, _, control_flow| {
         match ev {
@@ -70,7 +72,7 @@ fn main() {
             Event::RedrawRequested(_) => {
                 // Update time elapsed
                 let now = Instant::now();
-                elapsed += now.duration_since(last_update_time).as_millis();
+                elapsed += now.duration_since(last_update_time).as_millis() as i128;
                 last_update_time = now;
 
                 // Create uniform values for the shader
