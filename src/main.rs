@@ -9,7 +9,7 @@ use glium::index::NoIndices;
 use glium::index::PrimitiveType::TrianglesList;
 use glium::texture::RawImage2d;
 use glium::uniforms::{EmptyUniforms, MagnifySamplerFilter, MinifySamplerFilter, Sampler, UniformsStorage};
-use winit::event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent};
+use winit::event::{ElementState, Event, KeyboardInput, MouseButton, VirtualKeyCode, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop, EventLoopBuilder};
 use winit::window::Window;
 
@@ -55,6 +55,10 @@ fn main() {
     let mut elapsed: i128 = LOGIC_UPDATE_TIME as i128;
     let mut running = false;
     let mut speed: f32 = 1f32;
+
+    let mut mouse_dragging = false;
+    let mut mouse_erase = false;
+    let mut mouse_position = (0f64, 0f64);
 
     event_loop.run(move |event, _, control_flow| {
         match event {
@@ -107,6 +111,38 @@ fn main() {
                         _ => (),
                     }
                 }
+                WindowEvent::MouseInput {
+                    state, button, ..
+                } => {
+                    match (button, state) {
+                        (MouseButton::Left, ElementState::Pressed) => {
+                            mouse_dragging = true;
+                            mouse_erase = false;
+                            if !running {
+                                set_cell_at_cursor(mouse_position, &mut board, !mouse_erase);
+                            }
+                        }
+                        (MouseButton::Right, ElementState::Pressed) => {
+                            mouse_dragging = true;
+                            mouse_erase = true;
+                            if !running {
+                                set_cell_at_cursor(mouse_position, &mut board, !mouse_erase);
+                            }
+                        }
+                        (MouseButton::Left | MouseButton::Right, ElementState::Released) => {
+                            mouse_dragging = false;
+                        }
+                        _ => ()
+                    }
+                }
+                WindowEvent::CursorMoved { position, .. } => {
+                    mouse_position = (position.x, position.y);
+                    if mouse_dragging {
+                        if !running {
+                            set_cell_at_cursor(mouse_position, &mut board, !mouse_erase);
+                        }
+                    }
+                }
                 _ => ()
             },
 
@@ -148,6 +184,21 @@ fn main() {
         }
     });
 }
+
+fn set_cell_at_cursor(mouse_position: (f64, f64), board: &mut Board, draw: bool) {
+    let (x, y) = mouse_position;
+
+    if x < 0f64 || y < 0f64 || x > 2048f64 || y > 2048f64 {
+        return;
+    }
+
+    let cell_size = 2048 / BOARD_SIZE;
+    let x = (x.floor() / cell_size as f64).floor() as usize;
+    let y = (y.floor() / cell_size as f64).floor() as usize;
+
+    board.set_cell(x, y, draw);
+}
+
 
 fn perform_generation(board: &mut Board) -> Board {
     let mut new_board = Board::new();

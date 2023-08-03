@@ -1,7 +1,7 @@
 use crate::direction::Direction;
 use crate::pattern::Pattern;
 
-pub const BOARD_SIZE: usize = 256;
+pub const BOARD_SIZE: usize = 128;
 
 const NEIGHBOUR_CELLS: [[i32; 2]; 8] = [
     [0, -1],
@@ -54,6 +54,10 @@ impl Board {
     }
 
     pub fn set_cell(&mut self, x: usize, y: usize, value: bool) {
+        if x >= BOARD_SIZE || y >= BOARD_SIZE {
+            return;
+        }
+
         self.cells[y][x] = value;
     }
 
