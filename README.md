@@ -30,7 +30,7 @@ When the simulation is paused, use the **left mouse** button to activate cells a
 - [x] Click to add life when paused
 - [x] Add active cell counter
 - [x] Add speed to window title
-- [ ] Improve color scheme
+- [x] Improve color scheme
 - [ ] Add some comments to the code
 - [ ] Test on Windows
 - [ ] Add screenshot to README

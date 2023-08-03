@@ -1,5 +1,6 @@
 use glium::{Display, Program};
 use glium::glutin::surface::WindowSurface;
+use glium::program::ProgramCreationInput;
 
 pub fn create_shader_program(display: &Display<WindowSurface>) -> Program {
     let vertex_shader_src = r#"
@@ -21,13 +22,17 @@ pub fn create_shader_program(display: &Display<WindowSurface>) -> Program {
     uniform vec2 boardsize;
 
     void main() {
+        vec4 foreground = vec4(0.075,0.298,0.812, 1.0);
+        vec4 background = vec4(0.114,0.114,0.114, 1);
+        vec4 grid = background * 1.3;
+
         vec2 pos = gl_FragCoord.xy / screensize;
         pos.y = 1.0 - pos.y;
         if(texture(tex, pos).r > 0){
-            color = vec4(0.1, 0.1, 0.44, 1);
+            color = foreground;
         }
         else{
-            color = vec4(1, 0.94, 0.96, 1);
+            color = background;
         }
 
         vec2 cell_size = screensize / boardsize;
@@ -36,13 +41,20 @@ pub fn create_shader_program(display: &Display<WindowSurface>) -> Program {
             vec2 mod = mod(pos * screensize, cell_size);
 
             if (abs(mod.x) < 1 || abs(mod.y) < 1) {
-                color = vec4(1, 0.94, 0.96, 1) * 0.90;
+                color = grid;
             }
         }
     }
     "#;
 
-    let program = Program::from_source(display, vertex_shader_src, fragment_shader_src,
-                                       None).unwrap();
-    return program;
+    return Program::new(display, ProgramCreationInput::SourceCode {
+        vertex_shader: vertex_shader_src,
+        fragment_shader: fragment_shader_src,
+        geometry_shader: None,
+        tessellation_control_shader: None,
+        tessellation_evaluation_shader: None,
+        transform_feedback_varyings: None,
+        outputs_srgb: true,
+        uses_point_size: false,
+    }).unwrap();
 }
