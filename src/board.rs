@@ -1,5 +1,5 @@
 use crate::direction::Direction;
-use crate::patterns::{Pattern};
+use crate::pattern::{Pattern};
 
 pub const BOARD_SIZE: usize = 256;
 
@@ -22,7 +22,7 @@ pub struct Board {
 impl Board {
     pub fn new() -> Self {
         Board {
-            generation: 0,
+            generation: 1,
             cells: [[false; BOARD_SIZE]; BOARD_SIZE],
         }
     }

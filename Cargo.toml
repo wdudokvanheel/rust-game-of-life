@@ -8,3 +8,4 @@ winit = "0.28"
 env_logger = "0.10"
 glium = {git = "https://github.com/glium/glium"}
 rand = "0.8"
+strum = { version = "0.25", features = ["derive"] }

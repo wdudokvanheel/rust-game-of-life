@@ -17,26 +17,24 @@ use board::Board;
 use shader::create_shader_program;
 
 use crate::board::BOARD_SIZE;
+use crate::direction::Direction;
 use crate::direction::Direction::{East, South};
-use crate::patterns::Pattern;
+use crate::pattern::Pattern;
 use crate::vertex::Vertex;
 
 mod board;
 mod vertex;
 mod shader;
-mod patterns;
+mod pattern;
 mod direction;
 
 const LOGIC_UPDATE_TIME: f32 = 500f32;
-const SLEEP_ON_START: i128 = 1000;
 
 fn main() {
     let mut board = Board::new();
     let center = BOARD_SIZE / 2;
 
-    let pattern = Pattern::Acorn;
-    // let pattern = Pattern::GliderGun;
-    board.place_rotated_pattern(pattern, center, center, East);
+    board.place_rotated_pattern(Pattern::get_random_pattern(), center, center, East);
 
     let event_loop = EventLoopBuilder::new().build();
     let (window, display) = create_window_display(&event_loop);
@@ -54,8 +52,8 @@ fn main() {
     let texture = Texture2d::new(&display, image).unwrap();
 
     let mut last_update_time = Instant::now();
-    let mut elapsed: i128 = -SLEEP_ON_START;
-    let mut running = true;
+    let mut elapsed: i128 = LOGIC_UPDATE_TIME as i128;
+    let mut running = false;
     let mut speed: f32 = 1f32;
 
     event_loop.run(move |event, _, control_flow| {
@@ -73,8 +71,18 @@ fn main() {
                     ..
                 } => {
                     match key {
-                        VirtualKeyCode::P => {
+                        VirtualKeyCode::Space => {
                             running = !running;
+                        }
+                        VirtualKeyCode::R => {
+                            running = false;
+                            board = Board::new();
+                            board.place_rotated_pattern(Pattern::get_random_pattern(), center,
+                                                        center, Direction::get_random_direction());
+                        }
+                        VirtualKeyCode::C => {
+                            running = false;
+                            board = Board::new();
                         }
                         VirtualKeyCode::D => {
                             if !running {

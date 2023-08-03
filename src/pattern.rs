@@ -1,14 +1,24 @@
+use rand::{Rng, thread_rng};
+use strum::{EnumCount, FromRepr};
+
 use crate::direction::Direction;
 
+#[derive(FromRepr, Debug, PartialEq, EnumCount)]
 pub enum Pattern {
     Glider,
     Beacon,
     Toad,
     GliderGun,
-    Acorn
+    Acorn,
 }
 
 impl Pattern {
+    pub fn get_random_pattern() -> Pattern {
+        let mut rng = thread_rng();
+        return Pattern::from_repr(rng.gen_range(0..Pattern::COUNT))
+            .unwrap_or(Pattern::Glider);
+    }
+
     pub fn grid(&self) -> Vec<Vec<u8>> {
         match *self {
             Pattern::Glider => vec![
