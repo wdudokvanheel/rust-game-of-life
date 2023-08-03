@@ -29,10 +29,20 @@ pub fn create_shader_program(display: &Display<WindowSurface>) -> Program {
         else{
             color = vec4(1, 0.94, 0.96, 1);
         }
+
+        vec2 cell_size = screensize / boardsize;
+
+        if (cell_size.x > 1 && cell_size.y > 1){
+            vec2 mod = mod(pos * screensize, cell_size);
+
+            if (abs(mod.x) < 1 || abs(mod.y) < 1) {
+                color = vec4(1, 0.94, 0.96, 1) * 0.90;
+            }
+        }
     }
     "#;
 
     let program = Program::from_source(display, vertex_shader_src, fragment_shader_src,
-                                              None).unwrap();
+                                       None).unwrap();
     return program;
 }
