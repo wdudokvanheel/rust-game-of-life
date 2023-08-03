@@ -9,9 +9,10 @@ use glium::index::NoIndices;
 use glium::index::PrimitiveType::TrianglesList;
 use glium::texture::RawImage2d;
 use glium::uniforms::{EmptyUniforms, MagnifySamplerFilter, MinifySamplerFilter, Sampler, UniformsStorage};
+use winit::dpi::LogicalSize;
 use winit::event::{ElementState, Event, KeyboardInput, MouseButton, VirtualKeyCode, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop, EventLoopBuilder};
-use winit::window::Window;
+use winit::window::{Window, WindowButtons};
 
 use board::Board;
 use shader::create_shader_program;
@@ -38,8 +39,9 @@ fn main() {
 
     let event_loop = EventLoopBuilder::new().build();
     let (window, display) = create_window_display(&event_loop);
+    let scale_factor = window.scale_factor();
+    let window_size = (1024f64 * scale_factor, 1024f64 * scale_factor);
     let program = create_shader_program(&display);
-
     // VBO to render a screen filling rectangle
     let vertex_buffer = create_rect_vbo(&display);
     let indices = NoIndices(TrianglesList);
@@ -123,14 +125,16 @@ fn main() {
                             mouse_dragging = true;
                             mouse_erase = false;
                             if !running {
-                                set_cell_at_cursor(mouse_position, &mut board, !mouse_erase);
+                                set_cell_at_cursor(window_size, mouse_position, &mut board,
+                                                   !mouse_erase);
                             }
                         }
                         (MouseButton::Right, ElementState::Pressed) => {
                             mouse_dragging = true;
                             mouse_erase = true;
                             if !running {
-                                set_cell_at_cursor(mouse_position, &mut board, !mouse_erase);
+                                set_cell_at_cursor(window_size, mouse_position, &mut board,
+                                                   !mouse_erase);
                             }
                         }
                         (MouseButton::Left | MouseButton::Right, ElementState::Released) => {
@@ -143,7 +147,8 @@ fn main() {
                     mouse_position = (position.x, position.y);
                     if mouse_dragging {
                         if !running {
-                            set_cell_at_cursor(mouse_position, &mut board, !mouse_erase);
+                            set_cell_at_cursor(window_size, mouse_position, &mut board,
+                                               !mouse_erase);
                         }
                     }
                 }
@@ -166,7 +171,7 @@ fn main() {
                     .minify_filter(MinifySamplerFilter::Nearest);
 
                 let uniforms = uniform! {
-                    screensize: [2048f32, 2048f32],
+                    screensize: [window_size.0 as f32, window_size.1 as f32],
                     boardsize: [BOARD_SIZE as f32, BOARD_SIZE as f32],
                     tex: sampler,
                 };
@@ -206,14 +211,17 @@ fn speed_to_string(speed: f32) -> String {
     format!("{:.0}x", inverse)
 }
 
-fn set_cell_at_cursor(mouse_position: (f64, f64), board: &mut Board, draw: bool) {
+fn set_cell_at_cursor(
+    window_size: (f64, f64),
+    mouse_position: (f64, f64),
+    board: &mut Board, draw: bool) {
     let (x, y) = mouse_position;
 
-    if x < 0f64 || y < 0f64 || x > 2048f64 || y > 2048f64 {
+    if x < 0f64 || y < 0f64 || x > window_size.0 || y > window_size.1 {
         return;
     }
 
-    let cell_size = 2048 / BOARD_SIZE;
+    let cell_size = window_size.0 / (BOARD_SIZE as f64);
     let x = (x.floor() / cell_size as f64).floor() as usize;
     let y = (y.floor() / cell_size as f64).floor() as usize;
 
@@ -305,11 +313,12 @@ fn get_rect_vertices() -> Vec<Vertex> {
 
 fn create_window_display(event_loop: &EventLoop<()>) -> (Window, Display<WindowSurface>) {
     let window_builder = winit::window::WindowBuilder::new()
+        .with_enabled_buttons(WindowButtons::CLOSE | WindowButtons::MINIMIZE)
+        .with_inner_size(LogicalSize::new(1024, 1024))
         .with_resizable(false);
 
     glium::backend::glutin::SimpleWindowBuilder::new()
         .set_window_builder(window_builder)
         .with_title("Game of Life")
-        .with_inner_size(2048, 2048)
         .build(&event_loop)
 }
