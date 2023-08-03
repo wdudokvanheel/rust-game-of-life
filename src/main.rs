@@ -133,6 +133,8 @@ fn main() {
                 }
                 update_texture(&texture, &board);
                 draw_frame(&display, &program, &vertex_buffer, &indices, &uniforms);
+                let title = format!("Game of Life :: Generation {}", board.generation);
+                window.set_title(&title);
             }
             _ => (),
         }
@@ -147,6 +149,7 @@ fn perform_generation(board: &mut Board) -> Board {
             new_board.set_cell(x, y, update_cell(board, x, y));
         }
     }
+    new_board.generation = board.generation + 1;
     return new_board;
 }
 

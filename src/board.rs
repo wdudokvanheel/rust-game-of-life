@@ -15,12 +15,14 @@ const NEIGHBOUR_CELLS: [[i32; 2]; 8] = [
 ];
 
 pub struct Board {
+    pub generation: i128,
     pub cells: [[bool; BOARD_SIZE]; BOARD_SIZE],
 }
 
 impl Board {
     pub fn new() -> Self {
         Board {
+            generation: 0,
             cells: [[false; BOARD_SIZE]; BOARD_SIZE],
         }
     }
