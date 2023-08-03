@@ -9,7 +9,7 @@ use glium::index::NoIndices;
 use glium::index::PrimitiveType::TrianglesList;
 use glium::texture::RawImage2d;
 use glium::uniforms::{EmptyUniforms, MagnifySamplerFilter, MinifySamplerFilter, Sampler, UniformsStorage};
-use winit::event::{Event, WindowEvent};
+use winit::event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop, EventLoopBuilder};
 use winit::window::Window;
 
@@ -27,7 +27,7 @@ mod shader;
 mod patterns;
 mod direction;
 
-const LOGIC_UPDATE_TIME: i128 = 50;
+const LOGIC_UPDATE_TIME: f32 = 500f32;
 const SLEEP_ON_START: i128 = 1000;
 
 fn main() {
@@ -55,14 +55,51 @@ fn main() {
 
     let mut last_update_time = Instant::now();
     let mut elapsed: i128 = -SLEEP_ON_START;
+    let mut running = true;
+    let mut speed: f32 = 1f32;
 
-    event_loop.run(move |ev, _, control_flow| {
-        match ev {
+    event_loop.run(move |event, _, control_flow| {
+        match event {
             Event::WindowEvent { event, .. } => match event {
                 WindowEvent::CloseRequested => {
                     *control_flow = ControlFlow::Exit;
                 }
-                _ => (),
+                WindowEvent::KeyboardInput {
+                    input: KeyboardInput {
+                        state: ElementState::Pressed,
+                        virtual_keycode: Some(key),
+                        ..
+                    },
+                    ..
+                } => {
+                    match key {
+                        VirtualKeyCode::P => {
+                            running = !running;
+                        }
+                        VirtualKeyCode::D => {
+                            if !running {
+                                board = perform_generation(&mut board);
+                            }
+                        }
+                        VirtualKeyCode::Key1 => {
+                            speed = 1f32;
+                        }
+                        VirtualKeyCode::Key2 => {
+                            speed = 1f32 / 2f32;
+                        }
+                        VirtualKeyCode::Key3 => {
+                            speed = 1f32 / 4f32;
+                        }
+                        VirtualKeyCode::Key4 => {
+                            speed = 1f32 / 8f32;
+                        }
+                        VirtualKeyCode::Key5 => {
+                            speed = 1f32 / 16f32;
+                        }
+                        _ => (),
+                    }
+                }
+                _ => ()
             },
 
             Event::RedrawEventsCleared => {
@@ -86,9 +123,13 @@ fn main() {
                     tex: sampler,
                 };
 
-                while elapsed > LOGIC_UPDATE_TIME {
-                    board = perform_generation(&mut board);
-                    elapsed -= LOGIC_UPDATE_TIME;
+                let logic_time: i128 = (LOGIC_UPDATE_TIME * speed).round() as i128;
+
+                while elapsed > logic_time {
+                    if running {
+                        board = perform_generation(&mut board);
+                    }
+                    elapsed -= logic_time;
                 }
                 update_texture(&texture, &board);
                 draw_frame(&display, &program, &vertex_buffer, &indices, &uniforms);
