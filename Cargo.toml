@@ -1,6 +1,6 @@
 [package]
 name = "game-of-life"
-version = "1.0"
+version = "1.0.0"
 edition = "2021"
 authors = ["Wesley Dudok van Heel <wesley@bitechular.com>"]
 description = "Game of Life simulator"
@@ -19,5 +19,5 @@ embed-resource = "2.2"
 [package.metadata.bundle]
 name = "Game of Life"
 identifier = "com.bitechular.gameoflife"
-icon = ["src/assets/icon.icns"]
+icon = ["assets/icon.icns"]
 
