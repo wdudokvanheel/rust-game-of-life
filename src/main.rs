@@ -28,7 +28,7 @@ mod shader;
 mod pattern;
 mod direction;
 
-const LOGIC_UPDATE_TIME: f32 = 500f32;
+const LOGIC_UPDATE_TIME: f32 = 1000f32;
 
 fn main() {
     let mut board = Board::new();
@@ -40,6 +40,7 @@ fn main() {
     let (window, display) = create_window_display(&event_loop);
     let program = create_shader_program(&display);
 
+    // VBO to render a screen filling rectangle
     let vertex_buffer = create_rect_vbo(&display);
     let indices = NoIndices(TrianglesList);
 
@@ -107,6 +108,9 @@ fn main() {
                         }
                         VirtualKeyCode::Key5 => {
                             speed = 1f32 / 16f32;
+                        }
+                        VirtualKeyCode::Key6 => {
+                            speed = 1f32 / 32f32;
                         }
                         _ => (),
                     }
@@ -177,13 +181,29 @@ fn main() {
                 }
                 update_texture(&texture, &board);
                 draw_frame(&display, &program, &vertex_buffer, &indices, &uniforms);
-                let title = format!("Game of Life :: Generation {} :: Population {}", board
-                    .generation, board.population);
+                let title = format!("Game of Life :: Speed {} :: Generation {} :: Population {} {}",
+                                    speed_to_string(speed), board.generation, board.population,
+                                    sim_state_to_string(running));
                 window.set_title(&title);
             }
             _ => (),
         }
     });
+}
+
+fn sim_state_to_string(running: bool) -> String {
+    if running {
+        return "".to_string();
+    }
+    return ":: Paused".to_string();
+}
+
+fn speed_to_string(speed: f32) -> String {
+    if speed == 0f32 {
+        return "0x".to_string();
+    }
+    let inverse = 1.0 / speed;
+    format!("{:.0}x", inverse)
 }
 
 fn set_cell_at_cursor(mouse_position: (f64, f64), board: &mut Board, draw: bool) {

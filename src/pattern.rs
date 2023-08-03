@@ -60,7 +60,7 @@ impl Pattern {
         let grid = self.grid();
         let rows = grid.len();
         let cols = grid[0].len();
-        let mut rotated = vec![];
+        let mut rotated :Vec<Vec<u8>>;
 
         match direction {
             Direction::North => rotated = grid,
