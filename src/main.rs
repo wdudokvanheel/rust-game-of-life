@@ -177,7 +177,8 @@ fn main() {
                 }
                 update_texture(&texture, &board);
                 draw_frame(&display, &program, &vertex_buffer, &indices, &uniforms);
-                let title = format!("Game of Life :: Generation {}", board.generation);
+                let title = format!("Game of Life :: Generation {} :: Population {}", board
+                    .generation, board.population);
                 window.set_title(&title);
             }
             _ => (),

@@ -17,6 +17,7 @@ const NEIGHBOUR_CELLS: [[i32; 2]; 8] = [
 pub struct Board {
     pub generation: i128,
     pub cells: [[bool; BOARD_SIZE]; BOARD_SIZE],
+    pub population: i128,
 }
 
 impl Board {
@@ -24,6 +25,7 @@ impl Board {
         Board {
             generation: 1,
             cells: [[false; BOARD_SIZE]; BOARD_SIZE],
+            population: 0,
         }
     }
 
@@ -47,7 +49,7 @@ impl Board {
                 let board_y = pattern_y + y;
 
                 if board_x < BOARD_SIZE && board_y < BOARD_SIZE {
-                    self.cells[board_y][board_x] = cell == 1;
+                    self.set_cell(board_x, board_y, cell == 1);
                 }
             }
         }
@@ -56,6 +58,12 @@ impl Board {
     pub fn set_cell(&mut self, x: usize, y: usize, value: bool) {
         if x >= BOARD_SIZE || y >= BOARD_SIZE {
             return;
+        }
+
+        if value && !self.cells[y][x] {
+            self.population += 1;
+        } else if !value && self.cells[y][x] {
+            self.population -= 1;
         }
 
         self.cells[y][x] = value;
