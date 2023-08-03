@@ -23,5 +23,5 @@ cargo run
 - [x] Spacebar to start (and toggle running)
 - [x] R to reset / C to clear
 - [x] Center new patterns
-- [ ] Wrap around board
+- [x] Wrap around board
 - [ ] Click to add life when paused

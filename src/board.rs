@@ -72,11 +72,22 @@ impl Board {
         let mut active: i8 = 0;
 
         for neighbour in NEIGHBOUR_CELLS {
-            let x = x + neighbour[0];
-            let y = y + neighbour[1];
+            let mut x = x + neighbour[0];
+            let mut y = y + neighbour[1];
 
-            if x < 0 || x >= BOARD_SIZE as i32 || y < 0 || y >= BOARD_SIZE as i32 {
-                continue;
+            // Wrap around the board
+            if x >= BOARD_SIZE as i32 {
+                x -= BOARD_SIZE as i32;
+            }
+            if x < 0 {
+                x += BOARD_SIZE as i32;
+            }
+
+            if y >= BOARD_SIZE as i32 {
+                y -= BOARD_SIZE as i32;
+            }
+            if y < 0 {
+                y += BOARD_SIZE as i32;
             }
 
             if self.is_cell_occupied(x as usize, y as usize) {
