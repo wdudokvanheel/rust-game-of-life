@@ -4,12 +4,11 @@ version = "0.2.0"
 edition = "2021"
 authors = ["Wesley Dudok van Heel <wesley@bitechular.com>"]
 description = "Game of Life simulator"
-build = "src/build.rs"
 
 [dependencies]
 winit = "0.28"
 env_logger = "0.10"
-glium = { git = "https://github.com/glium/glium" }
+glium = { git = "https://github.com/glium/glium", rev="9bf6a0001197416145c71287729e77ed4418f87b"}
 rand = "0.8"
 strum = { version = "0.25", features = ["derive"] }
 image = "0.24.6"

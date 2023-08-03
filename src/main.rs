@@ -31,6 +31,7 @@ mod pattern;
 mod direction;
 
 const LOGIC_UPDATE_TIME: f32 = 1000f32;
+const WINDOW_SIZE: i16 = 1024i16;
 
 fn main() {
     let mut board = Board::new();
@@ -41,18 +42,16 @@ fn main() {
     let event_loop = EventLoopBuilder::new().build();
     let (window, display) = create_window_display(&event_loop);
     let scale_factor = window.scale_factor();
-    let window_size = (1024f64 * scale_factor, 1024f64 * scale_factor);
+    let window_size = (WINDOW_SIZE as f64 * scale_factor, WINDOW_SIZE as f64 * scale_factor);
     let program = create_shader_program(&display);
+
     // VBO to render a screen filling rectangle
     let vertex_buffer = create_rect_vbo(&display);
     let indices = NoIndices(TrianglesList);
 
-    let width: u32 = BOARD_SIZE as u32;
-    let height: u32 = BOARD_SIZE as u32;
-
     let data = create_data_from_board(&board);
 
-    let image = RawImage2d::from_raw_rgb(data, (width, height));
+    let image = RawImage2d::from_raw_rgb(data, (BOARD_SIZE as u32, BOARD_SIZE as u32));
     let texture = Texture2d::new(&display, image).unwrap();
 
     let mut last_update_time = Instant::now();
@@ -316,7 +315,7 @@ fn get_rect_vertices() -> Vec<Vertex> {
 }
 
 fn create_window_display(event_loop: &EventLoop<()>) -> (Window, Display<WindowSurface>) {
-    let image = image::load(std::io::Cursor::new(&include_bytes!("assets/icon.png")),
+    let image = image::load(std::io::Cursor::new(&include_bytes!("../assets/icon.png")),
                             image::ImageFormat::Png).unwrap().to_rgba8();
     let icon = Icon::from_rgba(image.as_raw().to_owned(), image.width(), image.height()).unwrap();
 
@@ -325,6 +324,7 @@ fn create_window_display(event_loop: &EventLoop<()>) -> (Window, Display<WindowS
         .with_inner_size(LogicalSize::new(1024, 1024))
         .with_window_icon(Some(icon))
         .with_resizable(false);
+
 
     glium::backend::glutin::SimpleWindowBuilder::new()
         .set_window_builder(window_builder)

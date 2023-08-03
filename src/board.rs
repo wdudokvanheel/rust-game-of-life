@@ -29,6 +29,7 @@ impl Board {
         }
     }
 
+    #[allow(dead_code)]
     pub fn place_pattern(&mut self, pattern: Pattern, x: usize, y: usize) {
         let pattern_grid = pattern.grid();
         self.set_cells(pattern_grid, x, y);
