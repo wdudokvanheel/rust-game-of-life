@@ -1,5 +1,5 @@
 use crate::direction::Direction;
-use crate::pattern::{Pattern};
+use crate::pattern::Pattern;
 
 pub const BOARD_SIZE: usize = 256;
 
@@ -39,7 +39,7 @@ impl Board {
 
     pub fn set_cells(&mut self, cells: Vec<Vec<u8>>, x: usize, y: usize) {
         let y = y - (cells.len() / 2);
-        let x =  x - (cells.get(0).unwrap().len() / 2);
+        let x = x - (cells.get(0).unwrap().len() / 2);
 
         for (pattern_y, row) in cells.iter().enumerate() {
             for (pattern_x, &cell) in row.iter().enumerate() {

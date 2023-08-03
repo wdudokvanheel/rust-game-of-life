@@ -18,7 +18,7 @@ use shader::create_shader_program;
 
 use crate::board::BOARD_SIZE;
 use crate::direction::Direction;
-use crate::direction::Direction::{East, South};
+use crate::direction::Direction::East;
 use crate::pattern::Pattern;
 use crate::vertex::Vertex;
 
