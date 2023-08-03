@@ -2,10 +2,23 @@
 name = "game-of-life"
 version = "0.2.0"
 edition = "2021"
+authors = ["Wesley Dudok van Heel <wesley@bitechular.com>"]
+description = "Game of Life simulator"
+build = "src/build.rs"
 
 [dependencies]
 winit = "0.28"
 env_logger = "0.10"
-glium = {git = "https://github.com/glium/glium"}
+glium = { git = "https://github.com/glium/glium" }
 rand = "0.8"
 strum = { version = "0.25", features = ["derive"] }
+image = "0.24.6"
+
+[build-dependencies]
+embed-resource = "2.2"
+
+[package.metadata.bundle]
+name = "Game of Life"
+identifier = "com.bitechular.gameoflife"
+icon = ["src/assets/icon.icns"]
+

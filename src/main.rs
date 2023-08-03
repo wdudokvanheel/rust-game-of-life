@@ -1,3 +1,4 @@
+#![windows_subsystem = "windows"]
 #[macro_use]
 extern crate glium;
 
@@ -12,7 +13,7 @@ use glium::uniforms::{EmptyUniforms, MagnifySamplerFilter, MinifySamplerFilter, 
 use winit::dpi::LogicalSize;
 use winit::event::{ElementState, Event, KeyboardInput, MouseButton, VirtualKeyCode, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop, EventLoopBuilder};
-use winit::window::{Window, WindowButtons};
+use winit::window::{Icon, Window, WindowButtons};
 
 use board::Board;
 use shader::create_shader_program;
@@ -78,6 +79,9 @@ fn main() {
                     ..
                 } => {
                     match key {
+                        VirtualKeyCode::Escape => {
+                            *control_flow = ControlFlow::Exit;
+                        }
                         VirtualKeyCode::Space => {
                             running = !running;
                         }
@@ -312,9 +316,14 @@ fn get_rect_vertices() -> Vec<Vertex> {
 }
 
 fn create_window_display(event_loop: &EventLoop<()>) -> (Window, Display<WindowSurface>) {
+    let image = image::load(std::io::Cursor::new(&include_bytes!("assets/icon.png")),
+                            image::ImageFormat::Png).unwrap().to_rgba8();
+    let icon = Icon::from_rgba(image.as_raw().to_owned(), image.width(), image.height()).unwrap();
+
     let window_builder = winit::window::WindowBuilder::new()
         .with_enabled_buttons(WindowButtons::CLOSE | WindowButtons::MINIMIZE)
         .with_inner_size(LogicalSize::new(1024, 1024))
+        .with_window_icon(Some(icon))
         .with_resizable(false);
 
     glium::backend::glutin::SimpleWindowBuilder::new()

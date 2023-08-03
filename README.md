@@ -15,7 +15,8 @@ To run the simulator run the command
 * **1-5**: Set simulation speed
 * **R**: Reset the simulation with a random pattern
 * **C**: Reset the simulation and clear the board
-
+* **ESC** Exit the application
+* 
 ### Mouse
 
 When the simulation is paused, use the **left mouse** button to activate cells and the **right mouse** button to clear cells.
@@ -31,6 +32,8 @@ When the simulation is paused, use the **left mouse** button to activate cells a
 - [x] Add active cell counter
 - [x] Add speed to window title
 - [x] Improve color scheme
+- [x] Test on Windows
+- [x] Window icon 
+- [x] exe icon
 - [ ] Add some comments to the code
-- [ ] Test on Windows
 - [ ] Add screenshot to README
