@@ -29,7 +29,6 @@ impl Board {
 
     pub fn place_pattern(&mut self, pattern: Pattern, x: usize, y: usize) {
         let pattern_grid = pattern.grid();
-
         self.set_cells(pattern_grid, x, y);
     }
 
@@ -39,6 +38,9 @@ impl Board {
     }
 
     pub fn set_cells(&mut self, cells: Vec<Vec<u8>>, x: usize, y: usize) {
+        let y = y - (cells.len() / 2);
+        let x =  x - (cells.get(0).unwrap().len() / 2);
+
         for (pattern_y, row) in cells.iter().enumerate() {
             for (pattern_x, &cell) in row.iter().enumerate() {
                 let board_x = pattern_x + x;
