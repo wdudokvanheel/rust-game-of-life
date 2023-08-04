@@ -1,39 +1,47 @@
 # Conway's Game of Life
 
-## Running the simulator
+A simple implementation of [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) in Rust. 
 
-The only requirement is [Rust](https://www.rust-lang.org/tools/install) to build the simulator and a videocard that supports OpenGL.
-
-To run the simulator run the command
-`cargo run`
+![Screenshot](assets/screenshot.jpg)
 
 ## Controls
 
 ### Keyboard
 
 * **Spacebar**: Pause/resume the simulation
-* **1-5**: Set simulation speed
+* **1-6**: Set simulation speed
 * **R**: Reset the simulation with a random pattern
 * **C**: Reset the simulation and clear the board
 * **ESC** Exit the application
-* 
+
 ### Mouse
 
 When the simulation is paused, use the **left mouse** button to activate cells and the **right mouse** button to clear cells.
 
-## TODO
+## Building the simulator
 
-- [x] Add grid
-- [x] Spacebar to start (and toggle running)
-- [x] R to reset / C to clear
-- [x] Center new patterns
-- [x] Wrap around board
-- [x] Click to add life when paused
-- [x] Add active cell counter
-- [x] Add speed to window title
-- [x] Improve color scheme
-- [x] Test on Windows
-- [x] Window icon 
-- [x] exe icon
-- [ ] Add some comments to the code
-- [ ] Add screenshot to README
+Building the simulator requires [Rust](https://www.rust-lang.org/tools/install) 
+
+To run the simulator execute `cargo run`
+
+### MacOS app bundle
+
+To build the macOS app bundle:
+
+`cargo bundle --release --target x86_64-apple-darwin`
+
+This requires cargo-bundle, you can install it with cargo:
+
+`cargo install cargo-bundle`
+
+### Windows executable
+
+To crosscompile for Windows with [Docker](https://docs.docker.com/engine/install/) create the build container first:
+
+`docker build . -t rust_cross_compile/windows -f ./assets/Dockerfile.windows`
+
+and then use the container to build the application: 
+
+``
+docker run --rm -ti -v `pwd`:/app rust_cross_compile/windows
+``
